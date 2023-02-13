@@ -1,0 +1,25 @@
+{
+  "name": "professional_js",
+  "version": "1.0.0",
+  "description": "learning how to use JS in a professional way to build a media player",
+  "main": "index.js",
+  "scripts": {
+    "start": "live-server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/je-martini/professional_js.git"
+  },
+  "keywords": [
+    "JavaScript"
+  ],
+  "author": "Jesus Martini",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/je-martini/professional_js/issues"
+  },
+  "homepage": "https://github.com/je-martini/professional_js#readme",
+  "devDependencies": {
+    "live-server": "^1.1.0"
+  }
+}
