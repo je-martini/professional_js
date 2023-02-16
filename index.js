@@ -1,17 +1,7 @@
+import media_player from './media_player.js'
+
 const video = document.querySelector("video")
 const button = document.querySelector('button');
-
-
-function media_player(config) {
-    this.media = config.el;
-}
-
-media_player.prototype.play = function(){
-    this.media.play()
-}
-media_player.prototype.pause = function(){
-    this.media.pause()
-}
 
 const player = new media_player({ el: video});
 
