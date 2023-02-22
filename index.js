@@ -1,16 +1,21 @@
 import media_player from './media_player.js';
 import auto_play from './plugins/auto_play.js'
+import auto_pause from './plugins/auto_pause.js'
+
 
 const video = document.querySelector("video")
 const play_button = document.querySelector('.play_button');
 const mute_button = document.querySelector('.mute_button');
 const movies_sequence = document.querySelector('.movies_sequence')
+const movies_in_parallel = document.querySelector('.movies_in_parallel')
+const faster_movie = document.querySelector('.faster_movie')
 
 
 const player = new media_player({ 
     el: video,
     plugins: [
-        // new auto_play()
+        new auto_play(),
+        new auto_pause(),
     ], 
 });
 
@@ -27,7 +32,7 @@ mute_button.onclick = () => {
         video.muted = false
     } else if(! video.muted){
         video.muted = true
-    }
+     }
 }
 
 
@@ -55,8 +60,6 @@ async function get_top_movies_ids(n = 3){
     const ids = popular_movies.slice(0, n).map(movie => movie.id    )
     return ids
 }
-console.log(get_top_movies_ids)
-console.log('h')
 
 async function get_top_movies_in_sequence(){
     const ids = await get_top_movies_ids()
@@ -70,11 +73,44 @@ async function get_top_movies_in_sequence(){
     return movies
 }
 
-movies_sequence.onclick = async function() {
-    const movies = await get_top_movies_in_sequence()
-    // render_movies(movies)
+async function get_top_movies_in_parallel(){
+    const ids = await get_top_movies_ids()
+    const movie_promises = ids.map(id => get_movie(id))
+    
+    const movies = await Promise.all(movie_promises)
+    
+    return movies
+}
+async function get_faster_top_movie(){
+    const ids = await get_top_movies_ids()
+    const movie_promises = ids.map(id => get_movie())
+    
+    const first_movie = await Promise.race(movie_promises)
+
+    return first_movie
 }
 
+movies_sequence.onclick = async function() {
+    const movies = await get_top_movies_in_sequence()
+    render_movies(movies)
+}
+
+movies_in_parallel.onclick = async function() {
+    const movies = await get_top_movies_in_parallel();
+    render_movies(movies)
+
+}
+
+faster_movie.onclick = async function() {
+    const movie = await get_faster_top_movie()
+    render_movies([movie])
+}
+
+if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('/service_workers.js').catch(error => {
+        console.log(error.message)
+    })
+}
 
 
 
